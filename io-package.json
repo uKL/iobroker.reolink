@@ -1,0 +1,101 @@
+{
+    "common": {
+        "name": "reolink",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "zh-cn": "首次出版"
+            }
+        },
+        "title": "Reolink Camera",
+        "titleLang": {
+            "en": "Reolink Camera",
+            "de": "Reolink-Kamera",
+            "ru": "Камера Reolink",
+            "pt": "Câmera Reolink",
+            "nl": "Reolink-camera",
+            "fr": "Caméra Reolink",
+            "it": "Ricollega fotocamera",
+            "es": "Cámara Reolink",
+            "pl": "Połącz kamerę",
+            "zh-cn": "重新链接相机"
+        },
+        "desc": {
+            "en": "Adapter allowing access to the Reolink cameras API, for example to access motion detection events.",
+            "de": "Adapter, der den Zugriff auf die API der Reolink-Kameras ermöglicht, um beispielsweise auf Bewegungserkennungsereignisse zuzugreifen.",
+            "ru": "Адаптер, позволяющий получить доступ к API камер Reolink, например, для доступа к событиям обнаружения движения.",
+            "pt": "Adaptador que permite o acesso à API de câmeras Reolink, por exemplo, para acessar eventos de detecção de movimento.",
+            "nl": "Adapter die toegang geeft tot de Reolink camera's API, bijvoorbeeld om toegang te krijgen tot bewegingsdetectiegebeurtenissen.",
+            "fr": "Adaptateur permettant d'accéder à l'API des caméras Reolink, par exemple pour accéder aux événements de détection de mouvement.",
+            "it": "Adattatore che consente l'accesso all'API delle telecamere Reolink, ad esempio per accedere agli eventi di rilevamento del movimento.",
+            "es": "Adaptador que permite el acceso a la API de cámaras Reolink, por ejemplo, para acceder a eventos de detección de movimiento.",
+            "pl": "Adapter umożliwiający dostęp do API kamer Reolink, na przykład w celu uzyskania dostępu do zdarzeń wykrywania ruchu.",
+            "zh-cn": "允许访问 Reolink 相机 API 的适配器，例如访问运动检测事件。"
+        },
+        "authors": [
+            "Paweł Urban <pawel.urban@gmail.com>"
+        ],
+        "keywords": [
+            "reolink",
+            "camera"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "reolink.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/uKL/ioBroker.reolink/master/admin/reolink.png",
+        "readme": "https://github.com/uKL/ioBroker.reolink/blob/master/README.md",
+        "loglevel": "info",
+        "mode": "daemon",
+        "type": "alarm",
+        "compact": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "materialize": true,
+        "dependencies": [
+            {
+                "js-controller": ">=2.0.0"
+            }
+        ]
+    },
+    "native": {
+        "mdPollingInterval": 1000,
+        "cameraIpAddress": "",
+        "cameraUsername": "",
+        "cameraPassword": ""
+    },
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Device or service connected",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
+}
