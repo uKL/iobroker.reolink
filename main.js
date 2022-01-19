@@ -65,11 +65,13 @@ class Reolink extends utils.Adapter {
 
         if (motionStateObject.code != 0) {
             this.log.warn("Invalid response code: " + motionStateObject.code);
+            this.setState("info.connection", false, true);
             return;
         }
 
         if (typeof motionStateObject.value !== "object") {
             this.log.warn("Invalid status response: " + motionStateObject.value);
+            this.setState("info.connection", false, true);
             return;
         }
 
@@ -102,6 +104,7 @@ class Reolink extends utils.Adapter {
                 // ignore
             }
         });
+        this.setState("info.connection", true, true);
         // this.log.debug("Response: " + this._stringify(motionStateObject));
     }
 
