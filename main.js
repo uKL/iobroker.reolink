@@ -31,6 +31,7 @@ class Reolink extends utils.Adapter {
         this.log.info("config address: " + this.config.cameraIpAddress);
         this.log.info("config username: " + this.config.cameraUsername);
         this._createFolderObject("ai_motion_detection");
+        this._createFolderObject("motion_detection");
 
         const t = this;
         pollingTimer = this.setInterval(async function () {
@@ -60,19 +61,56 @@ class Reolink extends utils.Adapter {
 
     async _onPollingTick() {
         this.log.info("Updating data from camers.");
+        const aiMotionState = await this._updateAiMotion();
+        const motionState = await this._updateMotion();
+        this.setState("info.connection", aiMotionState && motionState, true);
+        // this.log.debug("Response: " + this._stringify(motionStateObject));
+    }
+
+    async _updateMotion() {
+        const aiMotionResponse = await this._requestGet(this._buildStateUri());
+        const motionStateObject = aiMotionResponse.body[0];
+
+        if (motionStateObject.code != 0) {
+            this.log.warn("Invalid response code: " + motionStateObject.code);
+            this.setState("info.connection", false, true);
+            return false;
+        }
+
+        if (typeof motionStateObject.value !== "object") {
+            this.log.warn("Invalid status response: " + motionStateObject.value);
+            this.setState("info.connection", false, true);
+            return false;
+        }
+        this.log.debug("Processing nonAI motion: " + this._stringify(motionStateObject.value));
+        const state = motionStateObject.value.state;
+        const channel = 0;
+
+        this._createStateObject(
+            "motion_detection.channels." + channel + ".state",
+            "state",
+            "boolean",
+            "indicator",
+            false
+        );
+        this._setState("motion_detection.channels." + channel + ".state", Boolean(state));
+        return true;
+    }
+
+    async _updateAiMotion() {
         const aiMotionResponse = await this._requestGet(this._buildAiStateUri());
         const motionStateObject = aiMotionResponse.body[0];
 
         if (motionStateObject.code != 0) {
             this.log.warn("Invalid response code: " + motionStateObject.code);
             this.setState("info.connection", false, true);
-            return;
+            return false;
         }
 
         if (typeof motionStateObject.value !== "object") {
             this.log.warn("Invalid status response: " + motionStateObject.value);
             this.setState("info.connection", false, true);
-            return;
+            return false;
         }
 
         Object.keys(motionStateObject.value).forEach(sub => {
@@ -104,8 +142,7 @@ class Reolink extends utils.Adapter {
                 // ignore
             }
         });
-        this.setState("info.connection", true, true);
-        // this.log.debug("Response: " + this._stringify(motionStateObject));
+        return true;
     }
 
     _stringify(motionStateObject) {
@@ -114,6 +151,10 @@ class Reolink extends utils.Adapter {
 
     _buildAiStateUri() {
         return "http://" + this.config.cameraIpAddress + "/cgi-bin/api.cgi?cmd=GetAiState&rs=&user=" + this.config.cameraUsername + "&password=" + this.config.cameraPassword;
+    }
+
+    _buildStateUri() {
+        return "http://" + this.config.cameraIpAddress + "/cgi-bin/api.cgi?cmd=GetMdState&user=" + this.config.cameraUsername + "&password=" + this.config.cameraPassword;
     }
 
     async _requestGet(requestUrl) {

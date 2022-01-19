@@ -1,6 +1,6 @@
 {
   "name": "iobroker.reolink",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Adapter allowing access to the Reolink cameras API, for example to access motion detection events.",
   "author": {
     "name": "Paweł Urban",
